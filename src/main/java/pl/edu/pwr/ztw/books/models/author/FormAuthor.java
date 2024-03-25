@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class FormAuthor {
-    public String firstName;
-    public String lastName;
-    public LocalDate birthday;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthday;
 
     public FormAuthor(String firstName, String lastName, LocalDate birthday) {
         this.firstName = firstName;

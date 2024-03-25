@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
-@Service("base")
+@Service("baseGetAuthorService")
 public class GetAuthorService implements IGetAuthorService {
     private final static Map<Integer, Author> authors = MockDatabase.getAuthors();
     @Override

@@ -1,9 +1,14 @@
 package pl.edu.pwr.ztw.books.services;
 
-public enum ReturnCode {
+public enum ReturnCode implements IMessageReturnCode {
     SUCCESS,
     BOOK_NOT_FOUND,
     AUTHOR_NOT_FOUND;
+
+    @Override
+    public boolean isSuccessCode() {
+        return this == SUCCESS;
+    }
 
     public String getCodeMessage() {
         switch (this) {

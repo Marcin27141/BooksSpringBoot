@@ -44,7 +44,7 @@ public class BooksController {
     @DeleteMapping(value = "/books/{id}")
     public ResponseEntity<Object> deleteBook(@PathVariable("id") int id) {
         var returnCode = booksService.deleteBook(id);
-        return ResponseGenerator.getResponseEntity(returnCode, "Product was successfully deleted");
+        return ResponseGenerator.getResponseEntity(returnCode, "Book was successfully deleted");
     }
 
 }

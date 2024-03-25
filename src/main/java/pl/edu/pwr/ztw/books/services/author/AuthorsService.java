@@ -1,6 +1,5 @@
 package pl.edu.pwr.ztw.books.services.author;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -8,19 +7,20 @@ import pl.edu.pwr.ztw.books.database.MockDatabase;
 import pl.edu.pwr.ztw.books.models.author.Author;
 import pl.edu.pwr.ztw.books.models.author.FormAuthor;
 import pl.edu.pwr.ztw.books.services.ReturnCode;
-import pl.edu.pwr.ztw.books.services.authorbook.IAuthorBookService;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AuthorsService implements IAuthorsService {
     private final static Map<Integer, Author> authors = MockDatabase.getAuthors();
-    private final IAuthorBookService authorBookService;
+    private final IDeleteAuthorService deleteAuthorService;
     private final IGetAuthorService authorGetService;
 
     @Autowired
-    public AuthorsService(@Qualifier("base") IGetAuthorService authorGetService, IAuthorBookService authorBookService) {
-        this.authorBookService = authorBookService;
+    public AuthorsService(@Qualifier("baseGetAuthorService") IGetAuthorService authorGetService, @Qualifier("baseDeleteAuthorService") IDeleteAuthorService deleteAuthorService) {
+        this.deleteAuthorService = deleteAuthorService;
         this.authorGetService = authorGetService;
     }
 
@@ -37,7 +37,7 @@ public class AuthorsService implements IAuthorsService {
 
     @Override
     public ReturnCode createAuthor(FormAuthor author) {
-        var newAuthor = new Author(MockDatabase.useAuthorsCounter(), author.firstName, author.lastName, author.birthday);
+        var newAuthor = new Author(MockDatabase.useAuthorsCounter(), author.getFirstName(), author.getLastName(), author.getBirthday());
         authors.put(newAuthor.getId(), newAuthor);
         return ReturnCode.SUCCESS;
     }
@@ -54,11 +54,6 @@ public class AuthorsService implements IAuthorsService {
 
     @Override
     public ReturnCode deleteAuthor(int id) {
-        var deleted = authors.remove(id);
-        if (deleted != null) {
-            authorBookService.handleDeletedAuthorBooks(id);
-            return ReturnCode.SUCCESS;
-        }
-        else return ReturnCode.AUTHOR_NOT_FOUND;
+        return deleteAuthorService.deleteAuthor(id);
     }
 }
