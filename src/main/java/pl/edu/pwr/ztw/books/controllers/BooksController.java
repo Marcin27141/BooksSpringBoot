@@ -9,7 +9,6 @@ import pl.edu.pwr.ztw.books.models.book.FormBook;
 import pl.edu.pwr.ztw.books.services.book.IBooksService;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 public class BooksController {
@@ -25,26 +24,27 @@ public class BooksController {
         return new ResponseEntity<>(booksService.getBooks(), HttpStatus.OK);
     }
 
-    @GetMapping("/get/book/{id}")
-    public ResponseEntity<Optional<Book>> getBookById(@PathVariable("id") int id){
-        return new ResponseEntity<>(booksService.getBookById(id), HttpStatus.OK);
+    @GetMapping("/get/books/{id}")
+    public ResponseEntity<Object> getBookById(@PathVariable("id") int id){
+        var book = booksService.getBookById(id);
+        return ResponseGenerator.getResponseEntityForOptional(book, "Couldn't find a book with id " + id);
     }
 
     @PostMapping("books")
     public ResponseEntity<Object> createBook(@RequestBody FormBook book) {
         var returnCode = booksService.createBook(book);
-        return ResponseGenerator.getResponseEntity(returnCode, "Book was successfully added");
+        return ResponseGenerator.getResponseEntityForCode(returnCode, "Book was successfully added", HttpStatus.CREATED);
     }
 
     @PutMapping("/books/{id}")
     public ResponseEntity<Object> updateBook(@PathVariable("id") int id, @RequestBody FormBook book) {
         var returnCode = booksService.updateBook(id, book);
-        return ResponseGenerator.getResponseEntity(returnCode, "Book was successfully updated");
+        return ResponseGenerator.getResponseEntityForCode(returnCode, "Book was successfully updated", HttpStatus.OK);
     }
     @DeleteMapping(value = "/books/{id}")
     public ResponseEntity<Object> deleteBook(@PathVariable("id") int id) {
         var returnCode = booksService.deleteBook(id);
-        return ResponseGenerator.getResponseEntity(returnCode, "Book was successfully deleted");
+        return ResponseGenerator.getResponseEntityForCode(returnCode, "Book was successfully deleted", HttpStatus.OK);
     }
 
 }

@@ -26,25 +26,26 @@ public class AuthorsController {
     }
 
     @GetMapping("/get/authors/{id}")
-    public ResponseEntity<Optional<Author>> getAuthorById(@PathVariable("id") int id){
-        return new ResponseEntity<>(authorsService.getAuthorById(id), HttpStatus.OK);
+    public ResponseEntity<Object> getAuthorById(@PathVariable("id") int id){
+        var author = authorsService.getAuthorById(id);
+        return ResponseGenerator.getResponseEntityForOptional(author, "Couldn't find an author with id " + id);
     }
 
     @PostMapping("authors")
     public ResponseEntity<Object> createAuthor(@RequestBody FormAuthor author) {
         var returnCode = authorsService.createAuthor(author);
-        return ResponseGenerator.getResponseEntity(returnCode, "Author was successfully added");
+        return ResponseGenerator.getResponseEntityForCode(returnCode, "Author was successfully added", HttpStatus.CREATED);
     }
 
     @PutMapping("/authors/{id}")
     public ResponseEntity<Object> updateAuthor(@PathVariable("id") int id, @RequestBody FormAuthor author) {
         var returnCode = authorsService.updateAuthor(id, author);
-        return ResponseGenerator.getResponseEntity(returnCode, "Author was successfully updated");
+        return ResponseGenerator.getResponseEntityForCode(returnCode, "Author was successfully updated", HttpStatus.OK);
     }
     @DeleteMapping(value = "/authors/{id}")
     public ResponseEntity<Object> deleteAuthor(@PathVariable("id") int id) {
         var returnCode = authorsService.deleteAuthor(id);
-        return ResponseGenerator.getResponseEntity(returnCode, "Author was successfully deleted");
+        return ResponseGenerator.getResponseEntityForCode(returnCode, "Author was successfully deleted", HttpStatus.OK);
     }
 
 
